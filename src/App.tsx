@@ -70,25 +70,25 @@ function App() {
         <>
           <h2>...grafted to your head, shoulders, or cheeks</h2>
           <pre>
-              {familiar.attributes.map((a) => effects.intrinsic[a]).map(([mod, value], i) => (
+              {familiar.attributes.map((a) => effects.intrinsic[a]).filter(Boolean).map(([mod, value], i) => (
                 <Fragment key={i}><b>{mod}</b>: {value}<br /></Fragment>
               ))}
           </pre>
           <h2>...grafted to your left nipple</h2>
           <pre>
-              {familiar.attributes.map((a) => effects.leftNipple[a]).map(([mod, value], i) => (
+              {familiar.attributes.map((a) => effects.leftNipple[a]).filter(Boolean).map(([mod, value], i) => (
                 <Fragment key={i}><b>{mod}</b>: {value}<br /></Fragment>
               ))}
           </pre>
           <h2>...grafted to your right nipple</h2>
           <pre>
-              {familiar.attributes.map((a) => effects.rightNipple[a]).map(([mod, value], i) => (
+              {familiar.attributes.map((a) => effects.rightNipple[a]).filter(Boolean).map(([mod, value], i) => (
                 <Fragment key={i}><b>{mod}</b>: {value}<br /></Fragment>
               ))}
           </pre>
           <h2>...grafted to your feet</h2>
           <pre>
-              {Object.entries(familiar.attributes.map((a) => effects.kick[a]).reduce<Record<string, number>>((acc, effect) => ({ ...acc, [effect]: (acc[effect] || 0) + 1 }), {})).map(([effect, intensity], i) => (
+              {Object.entries(familiar.attributes.map((a) => effects.kick[a]).filter(Boolean).reduce<Record<string, number>>((acc, effect) => ({ ...acc, [effect]: (acc[effect] || 0) + 1 }), {})).map(([effect, intensity], i) => (
                 <Fragment key={i}>{effect} (level {intensity})<br /></Fragment>
               ))}
           </pre>
