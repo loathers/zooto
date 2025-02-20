@@ -1,46 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
-import { Client, fetchExchange } from "@urql/core";
-import { graphql } from "gql.tada";
-import effects from "./effects.json";
+import { useEffect, useState } from "react";
 import { Modlist } from "./Modlist";
 import { Kick } from "./Kick";
-
-const client = new Client({
-  url: "https://data.loathers.net/graphql",
-  exchanges: [fetchExchange],
-});
-
-const isMod = (
-  mod: (string | number | boolean)[],
-): mod is [string, number] | [string, boolean] => {
-  if (!mod) return false;
-  if (mod.length !== 2) return false;
-  if (typeof mod[0] !== "string") return false;
-  if (typeof mod[1] !== "number" && typeof mod[1] !== "boolean") return false;
-  return true;
-};
-
-const familiarQuery = graphql(`
-  query Familiars {
-    allFamiliars {
-      nodes {
-        id
-        name
-        image
-        attributes
-      }
-    }
-  }
-`);
-
-type Attribute = keyof typeof effects.intrinsic;
-
-type Familiar = {
-  name: string;
-  id: number;
-  image: string;
-  attributes: Attribute[];
-};
+import { calculateFamiliars, Familiar } from "./calculate";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -49,19 +10,7 @@ function App() {
   useEffect(() => {
     async function load() {
       setLoading(true);
-      const familiars = await client.query(familiarQuery, {}).toPromise();
-      if (!familiars.data?.allFamiliars) {
-        return;
-      }
-      setFamiliars(
-        familiars.data.allFamiliars.nodes
-          .filter((f) => f !== null)
-          .map((f) => ({
-            ...f,
-            attributes: f.attributes.filter((a) => a !== null) as Attribute[],
-          }))
-          .sort((a, b) => a.name.localeCompare(b.name)),
-      );
+      setFamiliars(await calculateFamiliars());
       setLoading(false);
     }
 
@@ -71,6 +20,7 @@ function App() {
   const [nonStandardFamiliars, setNonStandardFamiliars] = useState<string[]>(
     [],
   );
+
   useEffect(() => {
     async function load() {
       const request = await fetch("https://oaf.loathers.net/standard.php");
@@ -90,20 +40,6 @@ function App() {
   }, [setNonStandardFamiliars]);
 
   const [familiar, setFamiliar] = useState<Familiar | null>(null);
-
-  const [intrinsics, leftNipple, rightNipple] = useMemo(
-    () =>
-      (["intrinsic", "leftNipple", "rightNipple"] as const).map(
-        (key) =>
-          familiar?.attributes.map((a) => effects[key][a]).filter(isMod) ?? [],
-      ),
-    [familiar],
-  );
-  const kickPowers = useMemo(
-    () =>
-      familiar?.attributes.map((a) => effects.kick[a]).filter(Boolean) ?? [],
-    [familiar],
-  );
 
   return (
     <>
@@ -145,13 +81,13 @@ function App() {
       {familiar && (
         <>
           <h2>...grafted to your head, shoulders, or cheeks</h2>
-          <Modlist mods={intrinsics} />
+          <Modlist mods={familiar.intrinsics} />
           <h2>...grafted to your left nipple</h2>
-          <Modlist mods={leftNipple} />
+          <Modlist mods={familiar.leftNipple} />
           <h2>...grafted to your right nipple</h2>
-          <Modlist mods={rightNipple} />
+          <Modlist mods={familiar.rightNipple} />
           <h2>...grafted to your feet</h2>
-          <Kick powers={kickPowers} />
+          <Kick powers={familiar.kickPowers} />
         </>
       )}
     </>
