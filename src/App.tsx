@@ -10,11 +10,13 @@ const client = new Client({
   exchanges: [fetchExchange],
 });
 
-const isMod = (mod: (string | number)[]): mod is [string, number] => {
+const isMod = (
+  mod: (string | number | boolean)[],
+): mod is [string, number] | [string, boolean] => {
   if (!mod) return false;
   if (mod.length !== 2) return false;
   if (typeof mod[0] !== "string") return false;
-  if (typeof mod[1] !== "number") return false;
+  if (typeof mod[1] !== "number" && typeof mod[1] !== "boolean") return false;
   return true;
 };
 
