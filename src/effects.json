@@ -96,7 +96,7 @@
     "hasshell": ["Damage Reduction", 20],
     "hasbeak": ["Candy Drops from Monsters", 25],
     "cantalk": ["Maximum MP", 100]
-  },  
+  },
   "leftNipple": {
     "sentient": ["Familiar Weight", 5],
     "organic": ["Familiar Experience Per Combat", 1],
