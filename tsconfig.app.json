@@ -25,7 +25,8 @@
       {
         "name": "gql.tada/ts-plugin",
         "schema": "https://data.loathers.net/graphql",
-        "tadaOutputLocation": "./data.loathers.d.ts"
+        "tadaOutputLocation": "./data.loathers.d.ts",
+        "trackFieldUsage": false
       }
     ]
   },
