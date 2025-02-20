@@ -67,7 +67,23 @@ function precalculateEffects(
 ): Familiar {
   const [intrinsics, leftNipple, rightNipple] = (
     ["intrinsic", "leftNipple", "rightNipple"] as const
-  ).map((key) => familiar.attributes.map((a) => effects[key][a]).filter(isMod));
+  ).map((key) =>
+    Object.entries(
+      familiar.attributes
+        .map((a) => effects[key][a])
+        .filter(isMod)
+        .reduce<Record<string, number | boolean>>((acc, [mod, value]) => {
+          if (typeof value === "boolean") {
+            acc[mod] = Boolean(acc[mod] ?? false) || value;
+          }
+          if (typeof value === "number") {
+            acc[mod] = Number(acc[mod] ?? 0) + value;
+          }
+          return acc;
+        }, {}),
+    ),
+  );
+
   const kickPowers = familiar.attributes
     .map((a) => effects.kick[a])
     .filter(Boolean);
