@@ -13,20 +13,22 @@ function App() {
   const [loading, setLoading] = useState(false);
   const allModifiers = useMemo(() => getAllModifiers(), []);
 
-  const [familiars, setFamiliars] = useState<Familiar[]>([]);
+  const [allFamiliars, setAllFamiliars] = useState<Familiar[]>([]);
   useEffect(() => {
     async function load() {
       setLoading(true);
-      setFamiliars(await calculateFamiliars());
+      setAllFamiliars(await calculateFamiliars());
       setLoading(false);
     }
 
     load();
-  }, [setFamiliars]);
+  }, [setAllFamiliars]);
 
   const [nonStandardFamiliars, setNonStandardFamiliars] = useState<string[]>(
     [],
   );
+
+  const [standardOnly, setStandardOnly] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -48,6 +50,21 @@ function App() {
 
   const [familiar, setFamiliar] = useState<Familiar | null>(null);
   const [maximizee, setMaximizee] = useState<string | null>(null);
+
+  const familiars = useMemo(() => {
+    if (!standardOnly) return allFamiliars;
+    return allFamiliars.filter((f) => !nonStandardFamiliars.includes(f.name));
+  }, [allFamiliars, nonStandardFamiliars, standardOnly]);
+
+  useEffect(() => {
+    if (
+      standardOnly &&
+      familiar &&
+      nonStandardFamiliars.includes(familiar.name)
+    ) {
+      setFamiliar(null);
+    }
+  }, [standardOnly, familiar, nonStandardFamiliars]);
 
   const maximized = useMemo(() => {
     if (!maximizee) return null;
@@ -98,13 +115,6 @@ function App() {
             </option>
           ))}
         </select>
-        {familiar && (
-          <div>
-            {nonStandardFamiliars.includes(familiar.name)
-              ? "out of standard"
-              : "currently in standard"}
-          </div>
-        )}
         <select
           value={maximizee ?? ""}
           onChange={(e) => {
@@ -119,6 +129,14 @@ function App() {
             </option>
           ))}
         </select>
+        <label>
+          <input
+            type="checkbox"
+            checked={standardOnly}
+            onChange={(e) => setStandardOnly(e.target.checked)}
+          />{" "}
+          Standard only
+        </label>
       </div>
       {(familiar || maximized) && (
         <>
