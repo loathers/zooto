@@ -6,8 +6,8 @@ import {
   type Familiar,
 } from "../calculate.js";
 
-import { Modlist } from "./Modlist.js";
 import { Kick } from "./Kick.js";
+import { FamiliarList } from "./FamiliarList.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
@@ -53,20 +53,21 @@ function App() {
     if (!maximizee) return null;
     const [intrinsic, leftNipple, rightNipple] = (
       ["intrinsic", "leftNipple", "rightNipple"] as const
-    ).map(
-      (key) => {
-        const relevant = familiars.filter((f) => f[key].find((m) => m[0] === maximizee));
-        if (relevant.length === 0) return [];
-        const sorted = relevant
-          .sort(
-            (a, b) =>
-              Number(b[key].find((m) => m[0] === maximizee)?.[1] ?? 0) -
-              Number(a[key].find((m) => m[0] === maximizee)?.[1] ?? 0),
-          );
-        const best = sorted[0][key].find((m) => m[0] === maximizee)?.[1] ?? 0;
-        return sorted.filter((f) => (f[key].find((m) => m[0] === maximizee)?.[1] ?? 0) === best);
-      }
-    );
+    ).map((key) => {
+      const relevant = familiars.filter((f) =>
+        f[key].find((m) => m[0] === maximizee),
+      );
+      if (relevant.length === 0) return [];
+      const sorted = relevant.sort(
+        (a, b) =>
+          Number(b[key].find((m) => m[0] === maximizee)?.[1] ?? 0) -
+          Number(a[key].find((m) => m[0] === maximizee)?.[1] ?? 0),
+      );
+      const best = sorted[0][key].find((m) => m[0] === maximizee)?.[1] ?? 0;
+      return sorted.filter(
+        (f) => (f[key].find((m) => m[0] === maximizee)?.[1] ?? 0) === best,
+      );
+    });
     return {
       maximizee,
       intrinsic,
@@ -80,11 +81,13 @@ function App() {
       <h1>Zooto</h1>
       <div style={{ display: "flex", gap: "1em", alignItems: "center" }}>
         <select
-          onChange={(e) =>
+          value={familiar?.id ?? ""}
+          onChange={(e) => {
             setFamiliar(
               familiars.find((f) => f.id === Number(e.target.value)) || null,
-            )
-          }
+            );
+            setMaximizee(null);
+          }}
         >
           <option value="">
             {loading ? "Loading familiars..." : "Select a familiar"}
@@ -97,23 +100,22 @@ function App() {
         </select>
         {familiar ? (
           <div>
-            <img
-              style={{ verticalAlign: "middle" }}
-              src={`https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/${familiar.image}`}
-            />
-            {" • "}
             {nonStandardFamiliars.includes(familiar.name)
               ? "out of standard"
               : "currently in standard"}
-            {" • "}
-            {familiar.attributes.join(", ") || <i>no known attributes</i>}
           </div>
         ) : (
           <div>Select a familiar to see more information</div>
         )}
       </div>
       <div>
-        <select onChange={(e) => setMaximizee(e.target.value || null)}>
+        <select
+          value={maximizee ?? ""}
+          onChange={(e) => {
+            setMaximizee(e.target.value || null);
+            setFamiliar(null);
+          }}
+        >
           <option value="">or find best for modifier</option>
           {allModifiers.map((m) => (
             <option key={m} value={m}>
@@ -124,45 +126,21 @@ function App() {
       </div>
       {(familiar || maximized) && (
         <>
-          <h2>...grafted to your head, shoulders, or cheeks</h2>
-          {maximized ? (
-            maximized.intrinsic.length > 0 ? maximized.intrinsic.map((f) => (
-              <>
-                <b>{f.name}</b>
-                <Modlist mods={f.intrinsic} maximizee={maximized.maximizee} />
-              </>
-            )) : (
-              <p>no familiar provides this modifier here</p>
-            )
-          ) : (
-            <Modlist mods={familiar?.intrinsic ?? []} />
-          )}
-          <h2>...grafted to your left nipple</h2>
-          {maximized ? (
-            maximized.leftNipple.length > 0 ? maximized.leftNipple.map((f) => (
-              <>
-                <b>{f.name}</b>
-                <Modlist mods={f.leftNipple} maximizee={maximized.maximizee} />
-              </>
-            )) : (
-              <p>no familiar provides this modifier here</p>
-            )
-          ) : (
-            <Modlist mods={familiar?.leftNipple ?? []} />
-          )}
-          <h2>...grafted to your right nipple</h2>
-          {maximized ? (
-            maximized.rightNipple.length > 0 ? maximized.rightNipple.map((f) => (
-              <>
-                <b>{f.name}</b>
-                <Modlist mods={f.rightNipple} maximizee={maximized.maximizee} />
-              </>
-            )) : (
-              <p>no familiar provides this modifier here</p>
-            )
-          ) : (
-            <Modlist mods={familiar?.rightNipple ?? []} />
-          )}
+          <FamiliarList
+            type="intrinsic"
+            familiars={familiar ? [familiar] : (maximized?.intrinsic ?? [])}
+            mod={maximized?.maximizee}
+          />
+          <FamiliarList
+            type="leftNipple"
+            familiars={familiar ? [familiar] : (maximized?.leftNipple ?? [])}
+            mod={maximized?.maximizee}
+          />
+          <FamiliarList
+            type="rightNipple"
+            familiars={familiar ? [familiar] : (maximized?.rightNipple ?? [])}
+            mod={maximized?.maximizee}
+          />
           {familiar && (
             <>
               <h2>...grafted to your feet</h2>
