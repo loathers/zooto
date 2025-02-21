@@ -79,7 +79,7 @@ function App() {
   return (
     <>
       <h1>Zooto</h1>
-      <div style={{ display: "flex", gap: "1em", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "0.5em", alignItems: "center" }}>
         <select
           value={familiar?.id ?? ""}
           onChange={(e) => {
@@ -98,17 +98,13 @@ function App() {
             </option>
           ))}
         </select>
-        {familiar ? (
+        {familiar && (
           <div>
             {nonStandardFamiliars.includes(familiar.name)
               ? "out of standard"
               : "currently in standard"}
           </div>
-        ) : (
-          <div>Select a familiar to see more information</div>
         )}
-      </div>
-      <div>
         <select
           value={maximizee ?? ""}
           onChange={(e) => {
@@ -144,7 +140,7 @@ function App() {
           {familiar && (
             <>
               <h2>...grafted to your feet</h2>
-              <Kick powers={familiar.kickPowers} />
+              <Kick powers={familiar.kick} />
             </>
           )}
         </>

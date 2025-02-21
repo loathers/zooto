@@ -40,15 +40,18 @@ export type Mod =
   | [type: string, value: boolean];
 export type Power = [effect: string, intensity: number];
 
-export type Familiar = {
+export type RawFamiliar = {
   name: string;
   id: number;
   image: string;
   attributes: Attribute[];
+};
+
+export type Familiar = RawFamiliar & {
   intrinsic: Mod[];
   leftNipple: Mod[];
   rightNipple: Mod[];
-  kickPowers: Power[];
+  kick: Power[];
 };
 
 export const isMod = (mod: (string | number | boolean)[]): mod is Mod => {
@@ -74,50 +77,62 @@ export async function calculateFamiliars() {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-function precalculateEffects(
-  familiar: Omit<
-    Familiar,
-    "intrinsic" | "leftNipple" | "rightNipple" | "kickPowers"
-  >,
-): Familiar {
+function precalculateEffects(familiar: RawFamiliar): Familiar {
   const [intrinsic, leftNipple, rightNipple] = (
     ["intrinsic", "leftNipple", "rightNipple"] as const
-  ).map((key) =>
-    Object.entries(
-      familiar.attributes
-        .map((a) => effects[key][a])
-        .filter(isMod)
-        .reduce<Record<string, number | boolean>>((acc, [mod, value]) => {
-          if (typeof value === "boolean") {
-            acc[mod] = Boolean(acc[mod] ?? false) || value;
-          }
-          if (typeof value === "number") {
-            acc[mod] = Number(acc[mod] ?? 0) + value;
-          }
-          return acc;
-        }, {}),
-    ),
-  );
+  ).map((key) => calculateStandardEffects(key, familiar));
 
-  const kickAttributes = familiar.attributes
-    .map((a) => effects.kick[a])
-    .filter(Boolean);
-
-  const kickPowers: Power[] = Object.entries(
-    kickAttributes.reduce<Record<string, number>>(
-      (acc, effect) => ({
-        ...acc,
-        [effect]: (acc[effect] || 0) + 1,
-      }),
-      {},
-    ),
-  ).map(([effect, intensity]) => [effect, intensity / kickAttributes.length]);
+  const kick = calculateKickEffects(familiar);
 
   return {
     ...familiar,
     intrinsic,
     leftNipple,
     rightNipple,
-    kickPowers,
+    kick,
   };
+}
+
+function calculateStandardEffects(
+  key: "intrinsic" | "leftNipple" | "rightNipple",
+  familiar: RawFamiliar,
+) {
+  return Object.entries(
+    familiar.attributes
+      .map((a) => effects[key][a])
+      .filter(isMod)
+      .reduce<Record<string, number | boolean>>((acc, [mod, value]) => {
+        if (typeof value === "boolean") {
+          acc[mod] = Boolean(acc[mod] ?? false) || value;
+        }
+        if (typeof value === "number") {
+          acc[mod] = Number(acc[mod] ?? 0) + value;
+        }
+        return acc;
+      }, {}),
+  );
+}
+
+function calculateKickEffects(familiar: RawFamiliar) {
+  const results = familiar.attributes
+    .map((a) => effects.kick[a])
+    .filter(Boolean);
+
+  const summed = results.reduce<Record<string, number>>(
+    (acc, effect) => ({
+      ...acc,
+      [effect]: (acc[effect] || 0) + 1,
+    }),
+    {},
+  );
+
+  const [winner, loser] = ["sniff", "banish"].sort(
+    (a, b) => (summed[b] ?? 0) - (summed[a] ?? 0),
+  );
+  summed[winner] -= summed[loser];
+  summed[loser] = 0;
+
+  return Object.entries(summed)
+    .filter(([, intensity]) => intensity > 0)
+    .map<Power>(([effect, intensity]) => [effect, intensity / results.length]);
 }
