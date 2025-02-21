@@ -20,23 +20,38 @@ const FamiliarQuery = graphql(`
   }
 `);
 
+export function getAllModifiers() {
+  return [
+    ...new Set(
+      [
+        ...Object.values(effects.intrinsic),
+        ...Object.values(effects.leftNipple),
+        ...Object.values(effects.rightNipple),
+      ]
+        .map((mod) => mod[0] as string)
+        .sort(),
+    ),
+  ];
+}
+
 type Attribute = keyof typeof effects.intrinsic;
-type Mod = [string, number] | [string, boolean];
+export type Mod =
+  | [type: string, value: number]
+  | [type: string, value: boolean];
+export type Power = [effect: string, intensity: number];
 
 export type Familiar = {
   name: string;
   id: number;
   image: string;
   attributes: Attribute[];
-  intrinsics: Mod[];
+  intrinsic: Mod[];
   leftNipple: Mod[];
   rightNipple: Mod[];
-  kickPowers: string[];
+  kickPowers: Power[];
 };
 
-export const isMod = (
-  mod: (string | number | boolean)[],
-): mod is [string, number] | [string, boolean] => {
+export const isMod = (mod: (string | number | boolean)[]): mod is Mod => {
   if (!mod) return false;
   if (mod.length !== 2) return false;
   if (typeof mod[0] !== "string") return false;
@@ -62,10 +77,10 @@ export async function calculateFamiliars() {
 function precalculateEffects(
   familiar: Omit<
     Familiar,
-    "intrinsics" | "leftNipple" | "rightNipple" | "kickPowers"
+    "intrinsic" | "leftNipple" | "rightNipple" | "kickPowers"
   >,
 ): Familiar {
-  const [intrinsics, leftNipple, rightNipple] = (
+  const [intrinsic, leftNipple, rightNipple] = (
     ["intrinsic", "leftNipple", "rightNipple"] as const
   ).map((key) =>
     Object.entries(
@@ -84,13 +99,23 @@ function precalculateEffects(
     ),
   );
 
-  const kickPowers = familiar.attributes
+  const kickAttributes = familiar.attributes
     .map((a) => effects.kick[a])
     .filter(Boolean);
 
+  const kickPowers: Power[] = Object.entries(
+    kickAttributes.reduce<Record<string, number>>(
+      (acc, effect) => ({
+        ...acc,
+        [effect]: (acc[effect] || 0) + 1,
+      }),
+      {},
+    ),
+  ).map(([effect, intensity]) => [effect, intensity / kickAttributes.length]);
+
   return {
     ...familiar,
-    intrinsics,
+    intrinsic,
     leftNipple,
     rightNipple,
     kickPowers,
