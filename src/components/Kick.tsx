@@ -10,7 +10,7 @@ type Props = {
 export function Kick({ familiars }: Props) {
   return (
     <>
-      <h2>...grafted to your feet (needs spading)</h2>
+      <h2>...grafted to your feet (for the combat skill; needs spading)</h2>
       <div style={{ gap: "1em", display: "flex", flexWrap: "wrap" }}>
         {familiars.map((familiar) => (
           <FamiliarContainer key={familiar.id} familiar={familiar}>
