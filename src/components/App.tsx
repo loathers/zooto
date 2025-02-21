@@ -123,26 +123,24 @@ function App() {
       {(familiar || maximized) && (
         <>
           <FamiliarList
+            title="head, shoulders, or butt cheeks (for the intrinsic)"
             type="intrinsic"
             familiars={familiar ? [familiar] : (maximized?.intrinsic ?? [])}
             mod={maximized?.maximizee}
           />
           <FamiliarList
+            title="left nipple (for the buff)"
             type="leftNipple"
             familiars={familiar ? [familiar] : (maximized?.leftNipple ?? [])}
             mod={maximized?.maximizee}
           />
           <FamiliarList
+            title="right nipple (for the buff)"
             type="rightNipple"
             familiars={familiar ? [familiar] : (maximized?.rightNipple ?? [])}
             mod={maximized?.maximizee}
           />
-          {familiar && (
-            <>
-              <h2>...grafted to your feet</h2>
-              <Kick powers={familiar.kick} />
-            </>
-          )}
+          {familiar && <Kick familiars={familiar ? [familiar] : []} />}
         </>
       )}
     </>

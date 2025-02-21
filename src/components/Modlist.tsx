@@ -8,8 +8,11 @@ type Props = {
 export function Modlist({ mods, maximizee }: Props) {
   return (
     <pre>
-      {mods.map(([mod, value], i) => (
-        <span key={i} style={{ color: mod === maximizee ? "blue" : undefined }}>
+      {mods.map(([mod, value]) => (
+        <span
+          key={mod}
+          style={{ color: mod === maximizee ? "blue" : undefined }}
+        >
           <b>{mod}</b>:{" "}
           {typeof value === "boolean" ? (value ? "true" : "false") : value}
           <br />

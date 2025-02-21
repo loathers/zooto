@@ -1,20 +1,75 @@
 import { Fragment } from "react";
 
-import { Power } from "../calculate.js";
+import { Familiar } from "../calculate.js";
+import { FamiliarContainer } from "./FamiliarContainer.js";
 
 type Props = {
-  powers: Power[];
+  familiars: Familiar[];
 };
 
-export function Kick({ powers }: Props) {
+export function Kick({ familiars }: Props) {
   return (
-    <pre>
-      {powers.map(([effect, intensity], i) => (
-        <Fragment key={i}>
-          <b>{effect}</b>: ({Math.round(intensity * 100)}%)
-          <br />
-        </Fragment>
-      ))}
-    </pre>
+    <>
+      <h2>...grafted to your feet (needs spading)</h2>
+      <div style={{ gap: "1em", display: "flex", flexWrap: "wrap" }}>
+        {familiars.map((familiar) => (
+          <FamiliarContainer key={familiar.id} familiar={familiar}>
+            <pre>
+              {familiar.kick.map(([effect, intensity]) => (
+                <Fragment key={effect}>
+                  {renderPower(effect, intensity)}
+                  <br />
+                </Fragment>
+              ))}
+            </pre>
+          </FamiliarContainer>
+        ))}
+      </div>
+    </>
   );
+}
+
+function renderPower(effect: string, intensity: number) {
+  const percentage = `${Math.round(intensity * 100)}%`;
+  const turns = 110 - Math.floor(intensity * 80);
+  switch (effect) {
+    case "sniff":
+      return (
+        <>
+          <b>Sniff</b> ({percentage} good)
+        </>
+      );
+    case "banish":
+      return (
+        <>
+          <b>Banish</b> ({percentage} good)
+        </>
+      );
+    case "heal":
+      return (
+        <>
+          <b>Sniff</b> ({percentage} good)
+        </>
+      );
+    case "instakill":
+      return (
+        <>
+          <b>Instakill</b> + {turns} turns of ELY
+        </>
+      );
+    case "stun":
+      return (
+        <>
+          <b>Stun</b> ({percentage} good)
+        </>
+      );
+    case "pp":
+      return (
+        <>
+          <b>Pickpocket</b> ({percentage} good)
+        </>
+      );
+    default:
+      return <>Unrecognised power "{effect}"</>;
+  }
 }
