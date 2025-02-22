@@ -137,7 +137,6 @@ function calculateKickEffects(familiar: RawFamiliar) {
   // Only the winner of sniff vs banish is counted. In a draw neither seem to apply
   const [sniff, banish] = ["sniff", "banish"].map((effect) => summed[effect]);
   if (sniff === banish) {
-    console.log(familiar.name, sniff, banish);
     summed.sniff = 0;
     summed.banish = 0;
   } else {
