@@ -103,8 +103,17 @@ function App() {
 
   return (
     <>
-      <h1>Zooto</h1>
-      <div style={{ display: "flex", gap: "0.5em", alignItems: "center", flexWrap: "wrap" }}>
+      <h1 style={{ textAlign: "center" }}>
+        Zooto <img style={{ height: "0.8em" }} src="/zoot.png" />
+      </h1>
+      <div
+        style={{
+          display: "flex",
+          gap: "0.5em",
+          alignItems: "center",
+          flexWrap: "wrap",
+        }}
+      >
         <select
           value={familiar?.id ?? ""}
           onChange={(e) => {
