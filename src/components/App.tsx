@@ -81,10 +81,12 @@ function App() {
         f[key].find((m) => m[0] === maximizee),
       );
       if (relevant.length === 0) return [];
+      // We use Math.abs() since all the enchantments are "good" and negatives don't compete with positives (-combat and +combat are on different... nipples)
+      // We use Number() so that boolean modifiers are treated as 0 or 1
       const sorted = relevant.sort(
         (a, b) =>
-          Number(b[key].find((m) => m[0] === maximizee)?.[1] ?? 0) -
-          Number(a[key].find((m) => m[0] === maximizee)?.[1] ?? 0),
+          Math.abs(Number(b[key].find((m) => m[0] === maximizee)?.[1] ?? 0)) -
+          Math.abs(Number(a[key].find((m) => m[0] === maximizee)?.[1] ?? 0)),
       );
       const best = sorted[0][key].find((m) => m[0] === maximizee)?.[1] ?? 0;
       return sorted.filter(
