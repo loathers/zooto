@@ -104,7 +104,7 @@ function App() {
   return (
     <>
       <h1>Zooto</h1>
-      <div style={{ display: "flex", gap: "0.5em", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "0.5em", alignItems: "center", flexWrap: "wrap" }}>
         <select
           value={familiar?.id ?? ""}
           onChange={(e) => {
