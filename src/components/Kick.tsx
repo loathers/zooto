@@ -1,32 +1,20 @@
 import { Fragment } from "react";
 
 import { Familiar } from "../calculate.js";
-import { FamiliarContainer } from "./FamiliarContainer.js";
 
 type Props = {
-  familiars: Familiar[];
+  familiar: Familiar;
 };
 
-export function Kick({ familiars }: Props) {
+export function Kick({ familiar }: Props) {
   return (
-    <>
-      <h2>Grafted to your feet (for the combat skill; needs spading)</h2>
-      <div style={{ gap: "1em", display: "flex", flexWrap: "wrap" }}>
-        {familiars.map((familiar) => (
-          <FamiliarContainer key={familiar.id} familiar={familiar}>
-            <pre>
-              <ul style={{ paddingLeft: 0, listStyle: "none" }}>
-                {familiar.kick.map(([effect, intensity]) => (
-                  <Fragment key={effect}>
-                    {renderPower(effect, intensity)}
-                  </Fragment>
-                ))}
-              </ul>
-            </pre>
-          </FamiliarContainer>
+    <pre style={{ textWrap: "wrap" }}>
+      <ul style={{ paddingLeft: 0, listStyle: "none" }}>
+        {familiar.kick.map(([effect, intensity]) => (
+          <Fragment key={effect}>{renderPower(effect, intensity)}</Fragment>
         ))}
-      </div>
-    </>
+      </ul>
+    </pre>
   );
 }
 
