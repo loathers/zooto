@@ -91,7 +91,7 @@ function renderPower(effect: string, intensity: number) {
           <b>Stun</b> ({percentage} power)
           <ul>
             <li>
-              <i>for 𝑥 turns</i>
+              <i>for 𝑥 (between 1 and 6) turns</i>
             </li>
           </ul>
         </li>
