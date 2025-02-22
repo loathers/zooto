@@ -140,7 +140,7 @@ function calculateKickEffects(familiar: RawFamiliar) {
     summed.sniff = 0;
     summed.banish = 0;
   } else {
-    const loser = [sniff, banish].sort()[1];
+    const loser = ["sniff", "banish"].sort((a, b) => summed[a] - summed[b])[0];
     summed[loser] = 0;
   }
 
