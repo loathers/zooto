@@ -50,11 +50,9 @@ function renderPower(effect: string, intensity: number) {
           <b>Banish</b> ({percentage} power)
           <ul>
             <li>{111 - Math.floor(intensity * 80)} turns of ELY</li>
+            <li>{intensity === 1 ? "Does not take" : "Takes"} a turn</li>
             <li>
               <i>Won't return for 𝑥 turns</i>
-            </li>
-            <li>
-              <i>At high(?) power, does not take a turn</i>
             </li>
           </ul>
         </li>
@@ -76,12 +74,8 @@ function renderPower(effect: string, intensity: number) {
           <b>Instakill</b> ({percentage} power)
           <ul>
             <li>{111 - Math.floor(intensity * 80)} turns of ELY</li>
-            <li>
-              <i>At high(?) power, does not take a turn</i>
-            </li>
-            <li>
-              <i>At medium(?) power, acts as a Yellow Ray</i>
-            </li>
+            <li>{intensity === 1 ? "Does not take" : "Takes"} a turn</li>
+            <li>{intensity === 1 ? "Forces" : "Does not force"} all drops</li>
           </ul>
         </li>
       );
