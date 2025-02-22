@@ -127,14 +127,23 @@ function calculateKickEffects(familiar: RawFamiliar) {
       ...acc,
       [effect]: (acc[effect] || 0) + 1,
     }),
-    {},
+    {
+      // Because we do maths on these two we want them to never be undefined
+      sniff: 0,
+      banish: 0,
+    },
   );
 
-  const [winner, loser] = ["sniff", "banish"].sort(
-    (a, b) => (summed[b] ?? 0) - (summed[a] ?? 0),
-  );
-  summed[winner] = (summed[winner] ?? 0) - (summed[loser] ?? 0);
-  summed[loser] = 0;
+  // Only the winner of sniff vs banish is counted. In a draw neither seem to apply
+  const [sniff, banish] = ["sniff", "banish"].map((effect) => summed[effect]);
+  if (sniff === banish) {
+    console.log(familiar.name, sniff, banish);
+    summed.sniff = 0;
+    summed.banish = 0;
+  } else {
+    const loser = [sniff, banish].sort()[1];
+    summed[loser] = 0;
+  }
 
   return Object.entries(summed)
     .filter(([, intensity]) => intensity > 0)

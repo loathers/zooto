@@ -15,12 +15,13 @@ export function Kick({ familiars }: Props) {
         {familiars.map((familiar) => (
           <FamiliarContainer key={familiar.id} familiar={familiar}>
             <pre>
-              {familiar.kick.map(([effect, intensity]) => (
-                <Fragment key={effect}>
-                  {renderPower(effect, intensity)}
-                  <br />
-                </Fragment>
-              ))}
+              <ul style={{ paddingLeft: 0, listStyle: "none" }}>
+                {familiar.kick.map(([effect, intensity]) => (
+                  <Fragment key={effect}>
+                    {renderPower(effect, intensity)}
+                  </Fragment>
+                ))}
+              </ul>
             </pre>
           </FamiliarContainer>
         ))}
@@ -31,43 +32,80 @@ export function Kick({ familiars }: Props) {
 
 function renderPower(effect: string, intensity: number) {
   const percentage = `${Math.round(intensity * 100)}%`;
-  const turns = 110 - Math.floor(intensity * 80);
   switch (effect) {
     case "sniff":
       return (
-        <>
-          <b>Sniff</b> ({percentage} good)
-        </>
+        <li>
+          <b>Sniff</b> ({percentage} power)
+          <ul>
+            <li>
+              <i>5(?) different possibilities for number of copies added</i>
+            </li>
+          </ul>
+        </li>
       );
     case "banish":
       return (
-        <>
-          <b>Banish</b> ({percentage} good)
-        </>
+        <li>
+          <b>Banish</b> ({percentage} power)
+          <ul>
+            <li>{111 - Math.floor(intensity * 80)} turns of ELY</li>
+            <li>
+              <i>Won't return for 𝑥 turns</i>
+            </li>
+            <li>
+              <i>At high(?) power, does not take a turn</i>
+            </li>
+          </ul>
+        </li>
       );
     case "heal":
       return (
-        <>
-          <b>Sniff</b> ({percentage} good)
-        </>
+        <li>
+          <b>Heal</b> ({percentage} power)
+          <ul>
+            <li>
+              <i>Steal 𝑥 HP</i>
+            </li>
+          </ul>
+        </li>
       );
     case "instakill":
       return (
-        <>
-          <b>Instakill</b> + {turns} turns of ELY
-        </>
+        <li>
+          <b>Instakill</b> ({percentage} power)
+          <ul>
+            <li>{111 - Math.floor(intensity * 80)} turns of ELY</li>
+            <li>
+              <i>At high(?) power, does not take a turn</i>
+            </li>
+            <li>
+              <i>At medium(?) power, acts as a Yellow Ray</i>
+            </li>
+          </ul>
+        </li>
       );
     case "stun":
       return (
-        <>
-          <b>Stun</b> ({percentage} good)
-        </>
+        <li>
+          <b>Stun</b> ({percentage} power)
+          <ul>
+            <li>
+              <i>for 𝑥 turns</i>
+            </li>
+          </ul>
+        </li>
       );
     case "pp":
       return (
-        <>
-          <b>Pickpocket</b> ({percentage} good)
-        </>
+        <li>
+          <b>Pickpocket</b> ({percentage} power)
+          <ul>
+            <li>
+              <i>Chance increases with power</i>
+            </li>
+          </ul>
+        </li>
       );
     default:
       return <>Unrecognised power "{effect}"</>;
