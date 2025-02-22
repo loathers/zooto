@@ -34,7 +34,7 @@ export function getAllModifiers() {
   ];
 }
 
-type Attribute = keyof typeof effects.intrinsic;
+type Attribute = keyof typeof effects.intrinsic | "pokefam";
 export type Mod =
   | [type: string, value: number]
   | [type: string, value: boolean];
@@ -99,7 +99,11 @@ function calculateStandardEffects(
 ) {
   return Object.entries(
     familiar.attributes
-      .map((a) => effects[key][a])
+      .filter((a) => a in effects[key])
+      .map(
+        (a) =>
+          (effects[key] as Record<string, (string | number | boolean)[]>)[a],
+      )
       .filter(isMod)
       .reduce<Record<string, number | boolean>>((acc, [mod, value]) => {
         if (typeof value === "boolean") {
@@ -115,8 +119,8 @@ function calculateStandardEffects(
 
 function calculateKickEffects(familiar: RawFamiliar) {
   const results = familiar.attributes
-    .map((a) => effects.kick[a])
-    .filter(Boolean);
+    .filter((a) => a in effects.kick)
+    .map((a) => (effects.kick as Record<string, string>)[a]);
 
   const summed = results.reduce<Record<string, number>>(
     (acc, effect) => ({

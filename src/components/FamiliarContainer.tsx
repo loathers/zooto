@@ -14,11 +14,17 @@ export function FamiliarContainer({ familiar, children }: Props) {
       <div style={{ gap: "0.3em", display: "flex", alignItems: "center" }}>
         <img
           src={`https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/${familiar.image}`}
+          alt={familiar.name}
         />
-        <b>{familiar.name}</b>
-      </div>
-      <div style={{ marginTop: "4px", fontSize: "6px" }}>
-        {familiar.attributes.join(", ") || <i>no known attributes</i>}
+        <span>
+          <b>{familiar.name}</b>
+          <sup
+            style={{ marginLeft: "0.5em", fontSize: "8px", cursor: "help" }}
+            title={`Known Tags: ${familiar.attributes.join(", ") || "(none)"}`}
+          >
+            ⓘ
+          </sup>
+        </span>
       </div>
       {children}
     </div>

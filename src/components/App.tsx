@@ -29,6 +29,7 @@ function App() {
   );
 
   const [standardOnly, setStandardOnly] = useState(false);
+  const [noPokefam, setNoPokefam] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -52,19 +53,24 @@ function App() {
   const [maximizee, setMaximizee] = useState<string | null>(null);
 
   const familiars = useMemo(() => {
-    if (!standardOnly) return allFamiliars;
-    return allFamiliars.filter((f) => !nonStandardFamiliars.includes(f.name));
-  }, [allFamiliars, nonStandardFamiliars, standardOnly]);
+    let filtered = allFamiliars;
+
+    if (standardOnly)
+      filtered = filtered.filter((f) => !nonStandardFamiliars.includes(f.name));
+    if (noPokefam)
+      filtered = filtered.filter((f) => !f.attributes.includes("pokefam"));
+    return filtered;
+  }, [allFamiliars, nonStandardFamiliars, standardOnly, noPokefam]);
 
   useEffect(() => {
     if (
-      standardOnly &&
       familiar &&
-      nonStandardFamiliars.includes(familiar.name)
+      ((standardOnly && nonStandardFamiliars.includes(familiar.name)) ||
+        (noPokefam && familiar.attributes.includes("pokefam")))
     ) {
       setFamiliar(null);
     }
-  }, [standardOnly, familiar, nonStandardFamiliars]);
+  }, [standardOnly, familiar, nonStandardFamiliars, noPokefam]);
 
   const maximized = useMemo(() => {
     if (!maximizee) return null;
@@ -136,6 +142,14 @@ function App() {
             onChange={(e) => setStandardOnly(e.target.checked)}
           />{" "}
           Standard only
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={noPokefam}
+            onChange={(e) => setNoPokefam(e.target.checked)}
+          />{" "}
+          No Pokéfam
         </label>
       </div>
       {(familiar || maximized) && (
