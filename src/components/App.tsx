@@ -89,8 +89,10 @@ function App() {
           Math.abs(Number(a[key].find((m) => m[0] === maximizee)?.[1] ?? 0)),
       );
       const best = sorted[0][key].find((m) => m[0] === maximizee)?.[1] ?? 0;
+      // Find all the familiars that have the best score, but if there are fewer than 5 with that score, show the runners up.
       return sorted.filter(
-        (f) => (f[key].find((m) => m[0] === maximizee)?.[1] ?? 0) === best,
+        (f, i) =>
+          i < 5 || (f[key].find((m) => m[0] === maximizee)?.[1] ?? 0) === best,
       );
     });
     return {
