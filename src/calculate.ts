@@ -47,11 +47,14 @@ export type RawFamiliar = {
   attributes: Attribute[];
 };
 
+export type Mods = Record<string, number | boolean>;
+export type Powers = Record<string, number>;
+
 export type Familiar = RawFamiliar & {
-  intrinsic: Mod[];
-  leftNipple: Mod[];
-  rightNipple: Mod[];
-  kick: Power[];
+  intrinsic: Mods;
+  leftNipple: Mods;
+  rightNipple: Mods;
+  kick: Powers;
 };
 
 export const isMod = (mod: (string | number | boolean)[]): mod is Mod => {
@@ -97,24 +100,21 @@ function calculateStandardEffects(
   key: "intrinsic" | "leftNipple" | "rightNipple",
   familiar: RawFamiliar,
 ) {
-  return Object.entries(
-    familiar.attributes
-      .filter((a) => a in effects[key])
-      .map(
-        (a) =>
-          (effects[key] as Record<string, (string | number | boolean)[]>)[a],
-      )
-      .filter(isMod)
-      .reduce<Record<string, number | boolean>>((acc, [mod, value]) => {
-        if (typeof value === "boolean") {
-          acc[mod] = Boolean(acc[mod] ?? false) || value;
-        }
-        if (typeof value === "number") {
-          acc[mod] = Number(acc[mod] ?? 0) + value;
-        }
-        return acc;
-      }, {}),
-  );
+  return familiar.attributes
+    .filter((a) => a in effects[key])
+    .map(
+      (a) => (effects[key] as Record<string, (string | number | boolean)[]>)[a],
+    )
+    .filter(isMod)
+    .reduce<Record<string, number | boolean>>((acc, [mod, value]) => {
+      if (typeof value === "boolean") {
+        acc[mod] = Boolean(acc[mod] ?? false) || value;
+      }
+      if (typeof value === "number") {
+        acc[mod] = Number(acc[mod] ?? 0) + value;
+      }
+      return acc;
+    }, {});
 }
 
 function calculateKickEffects(familiar: RawFamiliar) {
@@ -144,7 +144,12 @@ function calculateKickEffects(familiar: RawFamiliar) {
     summed[loser] = 0;
   }
 
-  return Object.entries(summed)
-    .filter(([, intensity]) => intensity > 0)
-    .map<Power>(([effect, intensity]) => [effect, intensity / results.length]);
+  return Object.fromEntries(
+    Object.entries(summed)
+      .filter(([, intensity]) => intensity > 0)
+      .map<Power>(([effect, intensity]) => [
+        effect,
+        intensity / results.length,
+      ]),
+  );
 }

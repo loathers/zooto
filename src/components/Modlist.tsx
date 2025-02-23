@@ -1,23 +1,20 @@
-import { Mod } from "../calculate.js";
+import { Stack, Text } from "@chakra-ui/react";
+import { Mods } from "../calculate.js";
 
 type Props = {
-  mods: Mod[];
-  maximizee?: string;
+  mods: Mods;
+  sorted?: string;
 };
 
-export function Modlist({ mods, maximizee }: Props) {
+export function ModList({ mods, sorted }: Props) {
   return (
-    <pre>
-      {mods.map(([mod, value]) => (
-        <span
-          key={mod}
-          style={{ color: mod === maximizee ? "blue" : undefined }}
-        >
+    <Stack gap={0}>
+      {Object.entries(mods).map(([mod, value]) => (
+        <Text key={mod} color={mod === sorted ? "blue" : undefined}>
           <b>{mod}</b>:{" "}
           {typeof value === "boolean" ? (value ? "true" : "false") : value}
-          <br />
-        </span>
+        </Text>
       ))}
-    </pre>
+    </Stack>
   );
 }

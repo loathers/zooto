@@ -1,25 +1,31 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { calculateFamiliars, type Familiar } from "../calculate.js";
 
-import { FamiliarList } from "./FamiliarList.js";
-import { Controls, FamiliarSections } from "./Controls.js";
-import { FamiliarKickList } from "./FamiliarKickList.js";
+import {
+  Container,
+  Heading,
+  Image,
+  Spinner,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
+import { FamiliarTable } from "./FamiliarTable.js";
 
 function App() {
   const [loading, setLoading] = useState(false);
 
   // Load familiars
-  const [allFamiliars, setAllFamiliars] = useState<Familiar[]>([]);
+  const [familiars, setFamiliars] = useState<Familiar[]>([]);
   useEffect(() => {
     async function load() {
       setLoading(true);
-      setAllFamiliars(await calculateFamiliars());
+      setFamiliars(await calculateFamiliars());
       setLoading(false);
     }
 
     load();
-  }, [setAllFamiliars]);
+  }, [setFamiliars]);
 
   // Load standard list
   const [nonStandardFamiliars, setNonStandardFamiliars] = useState<string[]>(
@@ -43,54 +49,28 @@ function App() {
     load();
   }, [setNonStandardFamiliars]);
 
-  // Handle controls
-  const [sections, setSections] = useState<FamiliarSections>({});
-  const handleControls = useCallback((familiarSections: FamiliarSections) => {
-    setSections(familiarSections);
-  }, []);
+  const extendedFamiliars = useMemo(() => {
+    return familiars.map((f) => ({
+      ...f,
+      standard: !nonStandardFamiliars.includes(f.name),
+    }));
+  }, [familiars, nonStandardFamiliars]);
 
   return (
-    <>
-      <h1 style={{ textAlign: "center" }}>
-        Zooto <img style={{ height: "0.8em" }} src="/zoot.png" />
-      </h1>
-      <Controls
-        loading={loading}
-        allFamiliars={allFamiliars}
-        nonStandardFamiliars={nonStandardFamiliars}
-        onChange={handleControls}
-      />
-      {sections.intrinsic !== undefined && (
-        <FamiliarList
-          title="head, shoulders, or butt cheeks (for the intrinsic)"
-          type="intrinsic"
-          familiars={sections.intrinsic}
-          mod={sections.modifier}
-        />
-      )}
-      {sections.leftNipple !== undefined && (
-        <FamiliarList
-          title="left nipple (for the buff)"
-          type="leftNipple"
-          familiars={sections.leftNipple}
-          mod={sections.modifier}
-        />
-      )}
-      {sections.rightNipple !== undefined && (
-        <FamiliarList
-          title="right nipple (for the buff)"
-          type="rightNipple"
-          familiars={sections.rightNipple}
-          mod={sections.modifier}
-        />
-      )}
-      {sections.kick !== undefined && (
-        <FamiliarKickList
-          title="feet (for the combat skill)"
-          familiars={sections.kick}
-        />
-      )}
-    </>
+    <Container>
+      <Heading size="5xl">
+        <Stack
+          direction="row"
+          gap={2}
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text>Zooto</Text>
+          {loading ? <Spinner /> : <Image height="1em" src="/zoot.png" />}
+        </Stack>
+      </Heading>
+      <FamiliarTable familiars={extendedFamiliars} />
+    </Container>
   );
 }
 
