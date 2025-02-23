@@ -58,18 +58,20 @@ function App() {
 
   return (
     <Container>
-      <Heading size="5xl">
-        <Stack
-          direction="row"
-          gap={2}
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Text>Zooto</Text>
-          {loading ? <Spinner /> : <Image height="1em" src="/zoot.png" />}
-        </Stack>
-      </Heading>
-      <FamiliarTable familiars={extendedFamiliars} />
+      <Stack py={6} gap={6}>
+        <Heading size="5xl">
+          <Stack
+            direction="row"
+            gap={2}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Text>Zooto</Text>
+            {loading ? <Spinner /> : <Image height="1em" src="/zoot.png" />}
+          </Stack>
+        </Heading>
+        <FamiliarTable familiars={extendedFamiliars} />
+      </Stack>
     </Container>
   );
 }
