@@ -13,15 +13,18 @@ import {
 import { FamiliarTable } from "./FamiliarTable.js";
 
 function App() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    familiars: false,
+    standard: false,
+  });
 
   // Load familiars
   const [familiars, setFamiliars] = useState<Familiar[]>([]);
   useEffect(() => {
     async function load() {
-      setLoading(true);
+      setLoading((l) => ({ ...l, familiars: true }));
       setFamiliars(await calculateFamiliars());
-      setLoading(false);
+      setLoading((l) => ({ ...l, familiars: false }));
     }
 
     load();
@@ -33,6 +36,7 @@ function App() {
   );
   useEffect(() => {
     async function load() {
+      setLoading((l) => ({ ...l, standard: true }));
       const request = await fetch("https://oaf.loathers.net/standard.php");
       const standardPhp = await request.text();
       const standardPhpFamiliars =
@@ -44,6 +48,7 @@ function App() {
           ),
         ].map((m) => m[1]),
       );
+      setLoading((l) => ({ ...l, standard: false }));
     }
 
     load();
@@ -67,7 +72,11 @@ function App() {
             alignItems="center"
           >
             <Text>Zooto</Text>
-            {loading ? <Spinner /> : <Image height="1em" src="/zoot.png" />}
+            {Object.values(loading).some((v) => v === true) ? (
+              <Spinner size="lg" />
+            ) : (
+              <Image height="1em" src="/zoot.png" />
+            )}
           </Stack>
         </Heading>
         <FamiliarTable familiars={extendedFamiliars} />
