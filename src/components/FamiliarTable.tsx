@@ -12,12 +12,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { KickPowerList } from "./KickPowerList";
-import { ModList } from "./ModList";
 import { useState } from "react";
 import { LuCheck, LuX } from "react-icons/lu";
 import { FamiliarTableColumnVisibility } from "./FamiliarTableColumnVisibility";
 import { FamiliarTableHeader } from "./FamiliarTableHeader";
 import { TablePagination } from "./TablePagination";
+import { ModList } from "./ModList";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
