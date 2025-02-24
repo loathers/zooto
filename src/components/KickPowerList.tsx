@@ -1,5 +1,5 @@
 import { Powers } from "../calculate.js";
-import { Badge, DataList, Stack, Text } from "@chakra-ui/react";
+import { Badge, DataList, Stack } from "@chakra-ui/react";
 import { memo } from "react";
 
 type Props = {

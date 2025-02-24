@@ -1,4 +1,4 @@
-import { DataList, Stack, Text } from "@chakra-ui/react";
+import { DataList } from "@chakra-ui/react";
 import { Mods } from "../calculate.js";
 import { memo } from "react";
 
