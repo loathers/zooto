@@ -163,6 +163,11 @@ export function FamiliarTable({ familiars }: Props) {
   const table = useReactTable({
     data: familiars,
     columns,
+    initialState: {
+      columnVisibility: {
+        attributes: false,
+      },
+    },
     meta: {
       sortKeys,
     },
