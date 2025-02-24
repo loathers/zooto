@@ -175,7 +175,9 @@ export function FamiliarTable({ familiars }: Props) {
     initialState: {
       columnVisibility: {
         attributes: false,
+        standard: false,
       },
+      columnFilters: [{ id: "standard", value: true }],
     },
     meta: {
       sortKeys,
