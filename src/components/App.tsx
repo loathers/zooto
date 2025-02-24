@@ -57,7 +57,7 @@ function App() {
   }, [familiars, nonStandardFamiliars]);
 
   return (
-    <Container>
+    <Container maxWidth="100%">
       <Stack py={6} gap={6}>
         <Heading size="5xl">
           <Stack

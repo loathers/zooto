@@ -1,4 +1,4 @@
-import { Stack, Text } from "@chakra-ui/react";
+import { DataList, Stack, Text } from "@chakra-ui/react";
 import { Mods } from "../calculate.js";
 import { memo } from "react";
 
@@ -7,15 +7,24 @@ type Props = {
   sorted?: string;
 };
 
+function formatMod(mod: string) {
+  if (mod.startsWith("Damage vs. ")) return "Dmg" + mod.substring(6);
+  return mod;
+}
+
 export const ModList = memo(function ModList({ mods, sorted }: Props) {
   return (
-    <Stack gap={0}>
+    <DataList.Root orientation="horizontal" size="sm">
       {Object.entries(mods).map(([mod, value]) => (
-        <Text key={mod} color={mod === sorted ? "blue" : undefined}>
-          <b>{mod}</b>:{" "}
-          {typeof value === "boolean" ? (value ? "true" : "false") : value}
-        </Text>
+        <DataList.Item key={mod}>
+          <DataList.ItemLabel color={mod === sorted ? "blue.500" : undefined}>
+            {formatMod(mod)}
+          </DataList.ItemLabel>
+          <DataList.ItemValue color={mod === sorted ? "blue.700" : undefined}>
+            {typeof value === "boolean" ? (value ? "true" : "false") : value}
+          </DataList.ItemValue>
+        </DataList.Item>
       ))}
-    </Stack>
+    </DataList.Root>
   );
 });
