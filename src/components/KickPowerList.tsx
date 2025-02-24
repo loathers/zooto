@@ -4,6 +4,7 @@ import { memo } from "react";
 
 type Props = {
   powers: Powers;
+  sorted?: string;
 };
 
 function getKickLabel(effect: string) {
@@ -19,13 +20,22 @@ function getKickLabel(effect: string) {
   );
 }
 
-export const KickPowerList = memo(function KickPowerList({ powers }: Props) {
+export const KickPowerList = memo(function KickPowerList({
+  powers,
+  sorted,
+}: Props) {
   return (
     <DataList.Root orientation="horizontal" size="sm">
       {Object.entries(powers).map(([effect, intensity]) => (
         <DataList.Item key={effect}>
-          <DataList.ItemLabel>{getKickLabel(effect)}</DataList.ItemLabel>
-          <DataList.ItemValue>
+          <DataList.ItemLabel
+            color={effect === sorted ? "blue.500" : undefined}
+          >
+            {getKickLabel(effect)}
+          </DataList.ItemLabel>
+          <DataList.ItemValue
+            color={effect === sorted ? "blue.700" : undefined}
+          >
             <Stack direction="row" wrap="wrap">
               {Math.round(intensity * 100)}%
               <KickPowerBadges

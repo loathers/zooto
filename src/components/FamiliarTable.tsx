@@ -141,7 +141,16 @@ const columns = [
   }),
   columnHelper.accessor("kick", {
     header: "Feet",
-    cell: (info) => <KickPowerList powers={info.getValue()} />,
+    cell: (info) => (
+      <KickPowerList
+        powers={info.getValue()}
+        sorted={
+          info.column.getIsSorted()
+            ? info.table.options.meta?.sortKeys[info.column.id]
+            : undefined
+        }
+      />
+    ),
     sortingFn: sortByModifier,
     meta: {
       modifiers: [
