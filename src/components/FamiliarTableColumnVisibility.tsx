@@ -1,20 +1,18 @@
 import { Checkmark, IconButton, Menu, Portal } from "@chakra-ui/react";
 import { LuTableProperties } from "react-icons/lu";
+import { ExtendedFamiliar } from "./FamiliarTable";
+import { Column } from "@tanstack/react-table";
 
 type Props = {
-  headers: Record<string, string>;
-  value: Record<string, boolean>;
-  onChange: (value: Record<string, boolean>) => void;
+  columns: Column<ExtendedFamiliar>[];
 };
 
-export function FamiliarTableColumnVisibility({
-  headers,
-  value,
-  onChange,
-}: Props) {
+export function FamiliarTableColumnVisibility({ columns }: Props) {
   return (
     <Menu.Root
-      onSelect={({ value: v }) => onChange({ ...value, [v]: !value[v] })}
+      onSelect={({ value }) =>
+        columns.find((c) => c.id === value)?.toggleVisibility()
+      }
     >
       <Menu.Trigger asChild>
         <IconButton variant="outline" size="2xs" title="Column visibility">
@@ -24,9 +22,12 @@ export function FamiliarTableColumnVisibility({
       <Portal>
         <Menu.Positioner>
           <Menu.Content>
-            {Object.entries(value).map(([id, visible]) => (
-              <Menu.Item key={id} value={id} cursor="pointer">
-                <Checkmark checked={visible} /> {headers[id] ?? id}
+            {columns.map((column) => (
+              <Menu.Item key={column.id} value={column.id} cursor="pointer">
+                <Checkmark checked={column.getIsVisible()} />{" "}
+                {typeof column.columnDef.header === "string"
+                  ? column.columnDef.header
+                  : column.id}
               </Menu.Item>
             ))}
           </Menu.Content>

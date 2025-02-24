@@ -1,12 +1,12 @@
-import { LuCircleChevronRight, LuCircleHelp } from "react-icons/lu";
 import { Powers } from "../calculate.js";
-import { Badge, Box, List, Stack } from "@chakra-ui/react";
+import { Badge, Stack, Text } from "@chakra-ui/react";
+import { memo } from "react";
 
 type Props = {
   powers: Powers;
 };
 
-export function KickPowerList({ powers }: Props) {
+export const KickPowerList = memo(function KickPowerList({ powers }: Props) {
   return (
     <Stack gap={0}>
       {Object.entries(powers).map(([effect, intensity]) => (
@@ -14,7 +14,7 @@ export function KickPowerList({ powers }: Props) {
       ))}
     </Stack>
   );
-}
+});
 
 type KickPowerProps = {
   effect: string;
@@ -26,111 +26,78 @@ function KickPower({ effect, intensity }: KickPowerProps) {
   switch (effect) {
     case "sniff":
       return (
-        <Box>
-          <b>Sniff</b> <Badge>{percentage} power</Badge>
-          <List.Root variant="plain">
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleHelp />
-              </List.Indicator>
-              5(?) different possibilities for number of copies added
-            </List.Item>
-          </List.Root>
-        </Box>
+        <Stack direction="row">
+          <Text>
+            <b>Sniff</b>: {percentage}
+          </Text>
+          <Badge
+            variant="outline"
+            title="5(?) different possibilities for number of copies added"
+          >
+            𝑥 copies
+          </Badge>
+        </Stack>
       );
     case "banish":
       return (
-        <Box>
-          <b>Banish</b> <Badge>{percentage} power</Badge>
-          <List.Root variant="plain">
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              {111 - Math.floor(intensity * 80)} turns of ELB
-            </List.Item>
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              {intensity === 1 ? "Does not take" : "Takes"} a turn
-            </List.Item>
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleHelp />
-              </List.Indicator>
-              Won't return for 𝑥 turns
-            </List.Item>
-          </List.Root>
-        </Box>
+        <Stack direction="row" wrap="wrap">
+          <Text>
+            <b>Banish</b>: {percentage} power
+          </Text>
+          <Badge colorPalette="blue">
+            {111 - Math.floor(intensity * 80)} ELB
+          </Badge>
+          {intensity === 1 && <Badge title="Does not take a turn">FREE</Badge>}
+          <Badge variant="outline" title="Banished for x turns">
+            𝑥 turns
+          </Badge>
+        </Stack>
       );
     case "heal":
       return (
-        <Box>
-          <b>Heal</b> <Badge>{percentage} power</Badge>
-          <List.Root variant="plain">
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleHelp />
-              </List.Indicator>
-              Steal 𝑥 HP
-            </List.Item>
-          </List.Root>
-        </Box>
+        <Stack direction="row">
+          <Text>
+            <b>Heal</b>: {percentage} power
+          </Text>
+          <Badge variant="outline" title="Steal x HP">
+            𝑥 HP
+          </Badge>
+        </Stack>
       );
     case "instakill":
       return (
-        <Box>
-          <b>Instakill</b> <Badge>{percentage} power</Badge>
-          <List.Root variant="plain">
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              {111 - Math.floor(intensity * 80)} turns of ELY
-            </List.Item>
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              {intensity === 1 ? "Does not take" : "Takes"} a turn
-            </List.Item>
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              {intensity === 1 ? "Forces" : "Does not force"} all drops
-            </List.Item>
-          </List.Root>
-        </Box>
+        <Stack direction="row">
+          <Text>
+            <b>Instakill</b>: {percentage} power
+          </Text>
+          <Badge colorPalette="yellow">
+            {111 - Math.floor(intensity * 80)} ELY
+          </Badge>
+          {intensity === 1 && <Badge title="Does not take a turn">FREE</Badge>}
+          {intensity === 1 && <Badge title="Forces all drops">YR</Badge>}
+        </Stack>
       );
     case "stun":
       return (
-        <Box>
-          <b>Stun</b> <Badge>{percentage} power</Badge>
-          <List.Root variant="plain">
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              Stunned for 𝑥 turns (between 1 and 6)
-            </List.Item>
-          </List.Root>
-        </Box>
+        <Stack direction="row">
+          <Text>
+            <b>Stun</b>: {percentage} power
+          </Text>
+          <Badge variant="outline" title="Stunned for x rounds">
+            𝑥 rounds
+          </Badge>
+        </Stack>
       );
     case "pp":
       return (
-        <Box>
-          <b>Pickpocket</b> <Badge>{percentage} power</Badge>
-          <List.Root variant="plain">
-            <List.Item>
-              <List.Indicator asChild>
-                <LuCircleChevronRight />
-              </List.Indicator>
-              Chance increases with power
-            </List.Item>
-          </List.Root>
-        </Box>
+        <Stack direction="row">
+          <Text>
+            <b>Pickpocket</b>: {percentage} power
+          </Text>
+          <Badge variant="outline" title="Chance increases with power">
+            +𝑥% chance
+          </Badge>
+        </Stack>
       );
     default:
       return <>Unrecognised power "{effect}"</>;

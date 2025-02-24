@@ -1,12 +1,13 @@
 import { Stack, Text } from "@chakra-ui/react";
 import { Mods } from "../calculate.js";
+import { memo } from "react";
 
 type Props = {
   mods: Mods;
   sorted?: string;
 };
 
-export function ModList({ mods, sorted }: Props) {
+export const ModList = memo(function ModList({ mods, sorted }: Props) {
   return (
     <Stack gap={0}>
       {Object.entries(mods).map(([mod, value]) => (
@@ -17,4 +18,4 @@ export function ModList({ mods, sorted }: Props) {
       ))}
     </Stack>
   );
-}
+});

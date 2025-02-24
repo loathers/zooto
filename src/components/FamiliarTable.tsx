@@ -4,19 +4,20 @@ import {
   createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
   getSortedRowModel,
   RowData,
   SortingFnOption,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table";
 import { KickPowerList } from "./KickPowerList";
-import { ModList } from "./Modlist";
+import { ModList } from "./ModList";
 import { useState } from "react";
 import { LuCheck, LuX } from "react-icons/lu";
 import { FamiliarTableColumnVisibility } from "./FamiliarTableColumnVisibility";
 import { FamiliarTableHeader } from "./FamiliarTableHeader";
+import { TablePagination } from "./TablePagination";
 
 declare module "@tanstack/react-table" {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -65,10 +66,13 @@ const columns = [
         <Text>{info.getValue()}</Text>
       </Stack>
     ),
+    enableColumnFilter: false,
   }),
   columnHelper.accessor("standard", {
     header: "Standard",
     cell: (info) => <Text>{info.getValue() ? <LuCheck /> : <LuX />}</Text>,
+    enableColumnFilter: true,
+    filterFn: "equals",
   }),
   columnHelper.accessor("attributes", {
     header: "Tags",
@@ -79,6 +83,7 @@ const columns = [
         ))}
       </List.Root>
     ),
+    enableColumnFilter: false,
   }),
   columnHelper.accessor("intrinsic", {
     header: "Head, etc",
@@ -96,6 +101,7 @@ const columns = [
     meta: {
       modifiers: getAllModifiers().map((m) => [m, m]),
     },
+    enableColumnFilter: false,
   }),
   columnHelper.accessor("leftNipple", {
     header: "Left Nipple",
@@ -113,6 +119,7 @@ const columns = [
     meta: {
       modifiers: getAllModifiers().map((m) => [m, m]),
     },
+    enableColumnFilter: false,
   }),
   columnHelper.accessor("rightNipple", {
     header: "Right Nipple",
@@ -130,6 +137,7 @@ const columns = [
     meta: {
       modifiers: getAllModifiers().map((m) => [m, m]),
     },
+    enableColumnFilter: false,
   }),
   columnHelper.accessor("kick", {
     header: "Feet",
@@ -145,83 +153,67 @@ const columns = [
         ["stun", "Stun"],
       ],
     },
+    enableColumnFilter: false,
   }),
 ];
 
 export function FamiliarTable({ familiars }: Props) {
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
-    name: true,
-    standard: true,
-    attributes: false,
-    intrinsic: true,
-    leftNipple: true,
-    rightNipple: true,
-    kick: true,
-  });
-
-  const [sorting, setSorting] = useState<SortingState>([]);
   const [sortKeys, setSortKeys] = useState({});
 
   const table = useReactTable({
     data: familiars,
     columns,
-    state: {
-      columnVisibility,
-      sorting,
-    },
     meta: {
       sortKeys,
     },
     getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onSortingChange: setSorting,
   });
 
+  console.log(table.getRowCount(), table.getState().pagination);
+
   return (
-    <Table.Root>
-      <Table.Header>
-        {table.getHeaderGroups().map((headerGroup) => (
-          <Table.Row key={headerGroup.id} verticalAlign="top">
-            {headerGroup.depth === 0 && (
-              <Table.ColumnHeader>
-                <FamiliarTableColumnVisibility
-                  headers={table.getAllColumns().reduce(
-                    (acc, column) => ({
-                      ...acc,
-                      [column.id]: column.columnDef.header ?? column.id,
-                    }),
-                    {},
-                  )}
-                  value={columnVisibility}
-                  onChange={setColumnVisibility}
+    <Stack alignItems="center">
+      <TablePagination table={table} />
+      <Table.Root>
+        <Table.Header>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Table.Row key={headerGroup.id} verticalAlign="top">
+              {headerGroup.depth === 0 && (
+                <Table.ColumnHeader>
+                  <FamiliarTableColumnVisibility
+                    columns={table.getAllColumns()}
+                  />
+                </Table.ColumnHeader>
+              )}
+              {headerGroup.headers.map((header) => (
+                <FamiliarTableHeader
+                  key={header.id}
+                  header={header}
+                  onChangeSortKey={(v) =>
+                    setSortKeys((sk) => ({ ...sk, [header.id]: v }))
+                  }
                 />
-              </Table.ColumnHeader>
-            )}
-            {headerGroup.headers.map((header) => (
-              <FamiliarTableHeader
-                key={header.id}
-                header={header}
-                onChange={(v) =>
-                  setSortKeys((sk) => ({ ...sk, [header.id]: v }))
-                }
-              />
-            ))}
-          </Table.Row>
-        ))}
-      </Table.Header>
-      <Table.Body>
-        {table.getRowModel().rows.map((row) => (
-          <Table.Row key={row.id} verticalAlign="top">
-            <Table.Cell />
-            {row.getVisibleCells().map((cell) => (
-              <Table.Cell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </Table.Cell>
-            ))}
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table.Root>
+              ))}
+            </Table.Row>
+          ))}
+        </Table.Header>
+        <Table.Body>
+          {table.getRowModel().rows.map((row) => (
+            <Table.Row key={row.id} verticalAlign="top">
+              <Table.Cell />
+              {row.getVisibleCells().map((cell) => (
+                <Table.Cell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Table.Cell>
+              ))}
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table.Root>
+      <TablePagination table={table} />
+    </Stack>
   );
 }
