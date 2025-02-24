@@ -67,6 +67,7 @@ const columns = [
       </Stack>
     ),
     enableColumnFilter: false,
+    enableHiding: false,
   }),
   columnHelper.accessor("standard", {
     header: "Standard",

@@ -23,8 +23,23 @@ export function FamiliarTableColumnVisibility({ columns }: Props) {
         <Menu.Positioner>
           <Menu.Content>
             {columns.map((column) => (
-              <Menu.Item key={column.id} value={column.id} cursor="pointer">
-                <Checkmark checked={column.getIsVisible()} />{" "}
+              <Menu.Item
+                key={column.id}
+                value={column.id}
+                cursor="pointer"
+                disabled={!column.getCanHide()}
+                title={
+                  column.getCanHide()
+                    ? column.getIsVisible()
+                      ? "Hide column"
+                      : "Show column"
+                    : "This column cannot be hidden"
+                }
+              >
+                <Checkmark
+                  disabled={!column.getCanHide()}
+                  checked={column.getIsVisible()}
+                />{" "}
                 {typeof column.columnDef.header === "string"
                   ? column.columnDef.header
                   : column.id}
