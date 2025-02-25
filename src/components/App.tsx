@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { calculateFamiliars, type Familiar } from "../calculate.js";
 
@@ -28,38 +28,7 @@ function App() {
     }
 
     load();
-  }, [setFamiliars]);
-
-  // Load standard list
-  const [nonStandardFamiliars, setNonStandardFamiliars] = useState<string[]>(
-    [],
-  );
-  useEffect(() => {
-    async function load() {
-      setLoading((l) => ({ ...l, standard: true }));
-      const request = await fetch("https://oaf.loathers.net/standard.php");
-      const standardPhp = await request.text();
-      const standardPhpFamiliars =
-        standardPhp.match(/<b>Familiars<\/b><p>(.*?)<p>/)?.[1] ?? "";
-      setNonStandardFamiliars(
-        [
-          ...standardPhpFamiliars.matchAll(
-            /<span class="i">(.*?)(?:, )?<\/span>/g,
-          ),
-        ].map((m) => m[1]),
-      );
-      setLoading((l) => ({ ...l, standard: false }));
-    }
-
-    load();
-  }, [setNonStandardFamiliars]);
-
-  const extendedFamiliars = useMemo(() => {
-    return familiars.map((f) => ({
-      ...f,
-      standard: !nonStandardFamiliars.includes(f.name),
-    }));
-  }, [familiars, nonStandardFamiliars]);
+  }, []);
 
   return (
     <Container maxWidth="100%">
@@ -79,7 +48,7 @@ function App() {
             )}
           </Stack>
         </Heading>
-        <FamiliarTable familiars={extendedFamiliars} />
+        <FamiliarTable familiars={familiars} />
       </Stack>
     </Container>
   );

@@ -15,6 +15,9 @@ const FamiliarQuery = graphql(`
         name
         image
         attributes
+        familiarModifierByFamiliar {
+          modifiers
+        }
       }
     }
   }
@@ -45,6 +48,7 @@ export type RawFamiliar = {
   id: number;
   image: string;
   attributes: Attribute[];
+  standard: boolean;
 };
 
 export type Mods = Record<string, number | boolean>;
@@ -55,6 +59,16 @@ export type Familiar = RawFamiliar & {
   leftNipple: Mods;
   rightNipple: Mods;
   kick: Powers;
+};
+
+const isStandard = (modifiers: Record<string, string>) => {
+  // No modifier means perma-standard
+  if (!modifiers["Last Available"]) return true;
+
+  const year = Number(modifiers["Last Available"].slice(1, 5));
+
+  // Hardcoding the year 2023 since Zoot will only be restricted in 2025. Manually remove all this code when the path leaves standard.
+  return year >= 2023;
 };
 
 export const isMod = (mod: (string | number | boolean)[]): mod is Mod => {
@@ -75,6 +89,10 @@ export async function calculateFamiliars() {
     .map((f) => ({
       ...f,
       attributes: f.attributes.filter((a) => a !== null) as Attribute[],
+      standard: isStandard(
+        (f.familiarModifierByFamiliar?.modifiers as Record<string, string>) ??
+          {},
+      ),
     }))
     .map((f) => precalculateEffects(f))
     .sort((a, b) => a.name.localeCompare(b.name));

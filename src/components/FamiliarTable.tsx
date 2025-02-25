@@ -189,8 +189,6 @@ export function FamiliarTable({ familiars }: Props) {
     getSortedRowModel: getSortedRowModel(),
   });
 
-  console.log(table.getRowCount(), table.getState().pagination);
-
   return (
     <Stack alignItems="center">
       <TablePagination table={table} />
