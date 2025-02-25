@@ -63,16 +63,23 @@ type KickPowerBadgesProps = {
 };
 
 function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
+  if (intensity === 0) return null;
   switch (effect) {
     case "sniff":
+      const copies = (() => {
+        if (intensity === 1) return "5-6";
+        if (intensity >= 0.666) return "4-5";
+        if (intensity >= 0.333) return "3-4";
+        return "2-3";
+      })();
       return (
         <>
           <Badge
             size={size}
             variant="outline"
-            title="5(?) different possibilities for number of copies added"
+            title={`BEING SPADED: ${copies} copies added to the CSV`}
           >
-            𝑥 copies
+            {copies} copies
           </Badge>
         </>
       );
@@ -83,7 +90,11 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
             {111 - Math.floor(intensity * 80)} ELB
           </Badge>
           {intensity === 1 && <Badge title="Does not take a turn">FREE</Badge>}
-          <Badge size={size} variant="outline" title="Banished for x turns">
+          <Badge
+            size={size}
+            variant="outline"
+            title="BEING SPADED: Banished for x turns"
+          >
             𝑥 turns
           </Badge>
         </>
@@ -91,7 +102,7 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
     case "heal":
       return (
         <>
-          <Badge size={size} variant="outline" title="Steal x HP">
+          <Badge size={size} variant="outline" title="BEING SPADED: Steal x HP">
             𝑥 HP
           </Badge>
         </>
@@ -117,7 +128,11 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
     case "stun":
       return (
         <>
-          <Badge size={size} variant="outline" title="Stunned for x rounds">
+          <Badge
+            size={size}
+            variant="outline"
+            title="BEING SPADED: Stunned for x rounds"
+          >
             𝑥 rounds
           </Badge>
         </>
@@ -128,7 +143,7 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
           <Badge
             size={size}
             variant="outline"
-            title="Chance increases with power"
+            title="BEING SPADED: Chance increases with power"
           >
             +𝑥% chance
           </Badge>

@@ -62,7 +62,9 @@ const columns = [
         <Image
           src={`https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/${info.row.original.image}`}
         />
-        <Text whiteSpace="wrap" fontSize={["xs", null, "sm"]}>{info.getValue()}</Text>
+        <Text whiteSpace="wrap" fontSize={["xs", null, "sm"]}>
+          {info.getValue()}
+        </Text>
       </Stack>
     ),
     enableColumnFilter: false,

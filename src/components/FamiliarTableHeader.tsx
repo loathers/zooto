@@ -24,16 +24,11 @@ export function FamiliarTableHeader({ header, onChangeSortKey }: Props) {
         justifyContent="space-between"
       >
         {header.index === 0 && (
-          <FamiliarTableColumnVisibility
-            columns={table.getAllColumns()}
-          />
+          <FamiliarTableColumnVisibility columns={table.getAllColumns()} />
         )}
         {flexRender(header.column.columnDef.header, header.getContext())}
         <Group gap={1}>
-          <FamiliarTableHeaderSort
-            header={header}
-            onChange={onChangeSortKey}
-          />
+          <FamiliarTableHeaderSort header={header} onChange={onChangeSortKey} />
           <FamiliarTableHeaderFilter header={header} />
         </Group>
       </Stack>

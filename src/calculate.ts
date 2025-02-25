@@ -71,7 +71,7 @@ export async function calculateFamiliars() {
           modifiers: true,
         },
       },
-    }
+    },
   });
 
   if (!familiars.allFamiliars) {
