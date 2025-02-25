@@ -20,15 +20,7 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true,
-    "plugins": [
-      {
-        "name": "gql.tada/ts-plugin",
-        "schema": "https://data.loathers.net/graphql",
-        "tadaOutputLocation": "./data.loathers.d.ts",
-        "trackFieldUsage": false
-      }
-    ]
+    "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "data.loathers.d.ts"]
+  "include": ["src"]
 }

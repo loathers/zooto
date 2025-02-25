@@ -1,27 +1,7 @@
-import { Client, fetchExchange } from "@urql/core";
-import { graphql } from "gql.tada";
+import { createClient } from "data-of-loathing";
 import effects from "./effects.json";
 
-const client = new Client({
-  url: "https://data.loathers.net/graphql",
-  exchanges: [fetchExchange],
-});
-
-const FamiliarQuery = graphql(`
-  query Familiars {
-    allFamiliars {
-      nodes {
-        id
-        name
-        image
-        attributes
-        familiarModifierByFamiliar {
-          modifiers
-        }
-      }
-    }
-  }
-`);
+const client = createClient();
 
 export function getAllModifiers() {
   return [
@@ -80,11 +60,24 @@ export const isMod = (mod: (string | number | boolean)[]): mod is Mod => {
 };
 
 export async function calculateFamiliars() {
-  const familiars = await client.query(FamiliarQuery, {}).toPromise();
-  if (!familiars.data?.allFamiliars) {
+  const familiars = await client.query({
+    allFamiliars: {
+      nodes: {
+        id: true,
+        name: true,
+        image: true,
+        attributes: true,
+        familiarModifierByFamiliar: {
+          modifiers: true,
+        },
+      },
+    }
+  });
+
+  if (!familiars.allFamiliars) {
     return [];
   }
-  return familiars.data.allFamiliars.nodes
+  return familiars.allFamiliars.nodes
     .filter((f) => f !== null)
     .map((f) => ({
       ...f,
