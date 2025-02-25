@@ -2,10 +2,11 @@ import { Table } from "@tanstack/react-table";
 import {
   PaginationItems,
   PaginationNextTrigger,
+  PaginationPageText,
   PaginationPrevTrigger,
   PaginationRoot,
 } from "./ui/pagination";
-import { Stack } from "@chakra-ui/react";
+import { Box, Stack } from "@chakra-ui/react";
 
 type Props<T> = {
   table: Table<T>;
@@ -19,9 +20,14 @@ export function TablePagination<T>({ table }: Props<T>) {
       page={table.getState().pagination.pageIndex + 1}
       onPageChange={({ page }) => table.setPageIndex(page - 1)}
     >
-      <Stack direction="row">
+      <Stack direction="row" alignItems="center">
         <PaginationPrevTrigger />
-        <PaginationItems />
+        <Box display={["none", null, "block"]}>
+          <PaginationItems />
+        </Box>
+        <Box display={["block", null, "none"]}>
+          <PaginationPageText />
+        </Box>
         <PaginationNextTrigger />
       </Stack>
     </PaginationRoot>
