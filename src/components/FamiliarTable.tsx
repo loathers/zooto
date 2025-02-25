@@ -14,7 +14,6 @@ import {
 import { KickPowerList } from "./KickPowerList";
 import { useState } from "react";
 import { LuCheck, LuX } from "react-icons/lu";
-import { FamiliarTableColumnVisibility } from "./FamiliarTableColumnVisibility";
 import { FamiliarTableHeader } from "./FamiliarTableHeader";
 import { TablePagination } from "./TablePagination";
 import { ModList } from "./ModList";
@@ -59,11 +58,11 @@ const columns = [
   columnHelper.accessor("name", {
     header: "Familiar",
     cell: (info) => (
-      <Stack direction={["column", null, "row"]} alignItems="center">
+      <Stack direction={["column", null, null, "row"]} alignItems="center">
         <Image
           src={`https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/${info.row.original.image}`}
         />
-        <Text fontSize={["xs", null, "sm"]}>{info.getValue()}</Text>
+        <Text whiteSpace="wrap" fontSize={["xs", null, "sm"]}>{info.getValue()}</Text>
       </Stack>
     ),
     enableColumnFilter: false,
@@ -197,13 +196,6 @@ export function FamiliarTable({ familiars }: Props) {
           <Table.Header>
             {table.getHeaderGroups().map((headerGroup) => (
               <Table.Row key={headerGroup.id} verticalAlign="top">
-                {headerGroup.depth === 0 && (
-                  <Table.ColumnHeader>
-                    <FamiliarTableColumnVisibility
-                      columns={table.getAllColumns()}
-                    />
-                  </Table.ColumnHeader>
-                )}
                 {headerGroup.headers.map((header) => (
                   <FamiliarTableHeader
                     key={header.id}
@@ -219,7 +211,6 @@ export function FamiliarTable({ familiars }: Props) {
           <Table.Body>
             {table.getRowModel().rows.map((row) => (
               <Table.Row key={row.id} verticalAlign="top">
-                <Table.Cell />
                 {row.getVisibleCells().map((cell) => (
                   <Table.Cell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
