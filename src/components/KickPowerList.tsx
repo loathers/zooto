@@ -25,9 +25,14 @@ export const KickPowerList = memo(function KickPowerList({
   sorted,
 }: Props) {
   return (
-    <DataList.Root orientation="horizontal" size="sm">
+    <DataList.Root orientation="horizontal" size="sm" gap={[1, null, 2]}>
       {Object.entries(powers).map(([effect, intensity]) => (
-        <DataList.Item key={effect}>
+        <DataList.Item
+          key={effect}
+          alignItems="start"
+          flexDirection={["column", null, "row"]}
+          gap={1}
+        >
           <DataList.ItemLabel
             color={effect === sorted ? "blue.500" : undefined}
           >
@@ -36,7 +41,7 @@ export const KickPowerList = memo(function KickPowerList({
           <DataList.ItemValue
             color={effect === sorted ? "blue.700" : undefined}
           >
-            <Stack direction="row" wrap="wrap">
+            <Stack direction="row" wrap="wrap" gap={1}>
               {Math.round(intensity * 100)}%
               <KickPowerBadges
                 size="xs"

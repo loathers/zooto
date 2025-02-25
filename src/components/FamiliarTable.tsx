@@ -59,11 +59,11 @@ const columns = [
   columnHelper.accessor("name", {
     header: "Familiar",
     cell: (info) => (
-      <Stack direction="row" alignItems="center">
+      <Stack direction={["column", null, "row"]} alignItems="center">
         <Image
           src={`https://s3.amazonaws.com/images.kingdomofloathing.com/itemimages/${info.row.original.image}`}
         />
-        <Text>{info.getValue()}</Text>
+        <Text fontSize={["xs", null, "sm"]}>{info.getValue()}</Text>
       </Stack>
     ),
     enableColumnFilter: false,
@@ -192,42 +192,44 @@ export function FamiliarTable({ familiars }: Props) {
   return (
     <Stack alignItems="center">
       <TablePagination table={table} />
-      <Table.Root>
-        <Table.Header>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <Table.Row key={headerGroup.id} verticalAlign="top">
-              {headerGroup.depth === 0 && (
-                <Table.ColumnHeader>
-                  <FamiliarTableColumnVisibility
-                    columns={table.getAllColumns()}
+      <Table.ScrollArea width="100%">
+        <Table.Root>
+          <Table.Header>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <Table.Row key={headerGroup.id} verticalAlign="top">
+                {headerGroup.depth === 0 && (
+                  <Table.ColumnHeader>
+                    <FamiliarTableColumnVisibility
+                      columns={table.getAllColumns()}
+                    />
+                  </Table.ColumnHeader>
+                )}
+                {headerGroup.headers.map((header) => (
+                  <FamiliarTableHeader
+                    key={header.id}
+                    header={header}
+                    onChangeSortKey={(v) =>
+                      setSortKeys((sk) => ({ ...sk, [header.id]: v }))
+                    }
                   />
-                </Table.ColumnHeader>
-              )}
-              {headerGroup.headers.map((header) => (
-                <FamiliarTableHeader
-                  key={header.id}
-                  header={header}
-                  onChangeSortKey={(v) =>
-                    setSortKeys((sk) => ({ ...sk, [header.id]: v }))
-                  }
-                />
-              ))}
-            </Table.Row>
-          ))}
-        </Table.Header>
-        <Table.Body>
-          {table.getRowModel().rows.map((row) => (
-            <Table.Row key={row.id} verticalAlign="top">
-              <Table.Cell />
-              {row.getVisibleCells().map((cell) => (
-                <Table.Cell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </Table.Cell>
-              ))}
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table.Root>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.Header>
+          <Table.Body>
+            {table.getRowModel().rows.map((row) => (
+              <Table.Row key={row.id} verticalAlign="top">
+                <Table.Cell />
+                {row.getVisibleCells().map((cell) => (
+                  <Table.Cell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </Table.Cell>
+                ))}
+              </Table.Row>
+            ))}
+          </Table.Body>
+        </Table.Root>
+      </Table.ScrollArea>
       <TablePagination table={table} />
     </Stack>
   );

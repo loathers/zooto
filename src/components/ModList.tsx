@@ -14,9 +14,14 @@ function formatMod(mod: string) {
 
 export const ModList = memo(function ModList({ mods, sorted }: Props) {
   return (
-    <DataList.Root orientation="horizontal" size="sm">
+    <DataList.Root orientation="horizontal" size="sm" gap={[1, null, 2]}>
       {Object.entries(mods).map(([mod, value]) => (
-        <DataList.Item key={mod}>
+        <DataList.Item
+          key={mod}
+          alignItems="start"
+          flexDirection={["column", null, "row"]}
+          gap={1}
+        >
           <DataList.ItemLabel color={mod === sorted ? "blue.500" : undefined}>
             {formatMod(mod)}
           </DataList.ItemLabel>
