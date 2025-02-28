@@ -67,10 +67,10 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
   switch (effect) {
     case "sniff":
       const copies = (() => {
-        if (intensity === 1) return "5-6";
-        if (intensity >= 0.666) return "4-5";
-        if (intensity >= 0.333) return "3-4";
-        return "2-3";
+        if (intensity < 0.3) return "2-3";
+        if (intensity < 0.6) return "3-4";
+        if (intensity < 0.9) return "4-5";
+        return "5-6";
       })();
       return (
         <>
