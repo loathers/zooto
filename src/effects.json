@@ -109,7 +109,7 @@
     "mineral": ["Potion Drop", 25],
     "object": ["Maximum HP", 100],
     "technological": ["MP Regen", 10],
-    "robot": ["Muscle", 25],
+    "robot": ["Muscle %", 25],
     "software": ["Maximum MP", 50],
     "hasbones": ["Damage vs. Skeletons", 25],
     "haseyes": ["Spooky Resistance", 4],
@@ -140,11 +140,11 @@
     "good": ["Damage vs. Skeletons", 50],
     "evil": ["Weapon Damage", 10],
     "reallyevil": ["Combat Rate", -5],
-    "animatedart": ["Moxie", 50],
+    "animatedart": ["Moxie %", 50],
     "hasstinger": ["Spooky Damage", 10],
     "hasshell": ["Damage Reduction", 20],
     "hasbeak": ["Food Drop", 30],
-    "cantalk": ["Mysticality", 25]
+    "cantalk": ["Mysticality %", 25]
   },
   "kick": {
     "animal": "sniff",
