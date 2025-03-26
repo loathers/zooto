@@ -84,6 +84,7 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
         </>
       );
     case "banish":
+      const turns = parseFloat((10 + 90 * intensity).toFixed(2));
       return (
         <>
           <Badge size={size} colorPalette="blue">
@@ -93,9 +94,9 @@ function KickPowerBadges({ size, effect, intensity }: KickPowerBadgesProps) {
           <Badge
             size={size}
             variant="outline"
-            title="BEING SPADED: Banished for x turns"
+            title={`Banished for ${turns} turns`}
           >
-            𝑥 turns
+            {turns} turns
           </Badge>
         </>
       );
