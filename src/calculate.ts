@@ -17,7 +17,7 @@ export function getAllModifiers() {
   ];
 }
 
-type Attribute = keyof typeof effects.intrinsic | "pokefam";
+type Attribute = keyof typeof effects.intrinsic;
 export type Mod =
   | [type: string, value: number]
   | [type: string, value: boolean];
@@ -56,6 +56,7 @@ export async function calculateFamiliars() {
         name: true,
         image: true,
         attributes: true,
+        categories: true,
       },
     },
   });
@@ -65,6 +66,7 @@ export async function calculateFamiliars() {
   }
   return familiars.allFamiliars.nodes
     .filter((f) => f !== null)
+    .filter((f) => !f.categories.includes("POKEFAM"))
     .map((f) => ({
       ...f,
       attributes: f.attributes.filter((a) => a !== null) as Attribute[],
