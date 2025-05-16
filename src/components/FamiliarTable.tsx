@@ -13,7 +13,6 @@ import {
 } from "@tanstack/react-table";
 import { KickPowerList } from "./KickPowerList";
 import { useState } from "react";
-import { LuCheck, LuX } from "react-icons/lu";
 import { FamiliarTableHeader } from "./FamiliarTableHeader";
 import { TablePagination } from "./TablePagination";
 import { ModList } from "./ModList";
@@ -32,15 +31,13 @@ declare module "@tanstack/table-core" {
   }
 }
 
-export type ExtendedFamiliar = Familiar & { standard: boolean };
-
 type Props = {
-  familiars: ExtendedFamiliar[];
+  familiars: Familiar[];
 };
 
-const columnHelper = createColumnHelper<ExtendedFamiliar>();
+const columnHelper = createColumnHelper<Familiar>();
 
-const sortByModifier: SortingFnOption<ExtendedFamiliar> = (a, b, columnId) => {
+const sortByModifier: SortingFnOption<Familiar> = (a, b, columnId) => {
   const table = a.getAllCells()[0].getContext().table;
   const sortKey = table.options.meta?.sortKeys?.[columnId];
   if (!sortKey) return 0;
@@ -69,12 +66,6 @@ const columns = [
     ),
     enableColumnFilter: false,
     enableHiding: false,
-  }),
-  columnHelper.accessor("standard", {
-    header: "Standard",
-    cell: (info) => <Text>{info.getValue() ? <LuCheck /> : <LuX />}</Text>,
-    enableColumnFilter: true,
-    filterFn: "equals",
   }),
   columnHelper.accessor("attributes", {
     header: "Tags",
@@ -177,9 +168,8 @@ export function FamiliarTable({ familiars }: Props) {
     initialState: {
       columnVisibility: {
         attributes: false,
-        standard: false,
       },
-      columnFilters: [{ id: "standard", value: true }],
+      columnFilters: [],
     },
     meta: {
       sortKeys,

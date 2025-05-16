@@ -13,18 +13,15 @@ import {
 import { FamiliarTable } from "./FamiliarTable.js";
 
 function App() {
-  const [loading, setLoading] = useState({
-    familiars: false,
-    standard: false,
-  });
+  const [loading, setLoading] = useState(false);
 
   // Load familiars
   const [familiars, setFamiliars] = useState<Familiar[]>([]);
   useEffect(() => {
     async function load() {
-      setLoading((l) => ({ ...l, familiars: true }));
+      setLoading(true);
       setFamiliars(await calculateFamiliars());
-      setLoading((l) => ({ ...l, familiars: false }));
+      setLoading(false);
     }
 
     load();
