@@ -1,7 +1,8 @@
-import { createClient } from "data-of-loathing";
+import { createClient, FamiliarCategory, Familiar as FamiliarEntity } from "data-of-loathing";
 import effects from "./effects.json";
 
 const client = createClient();
+await client.load();
 
 export function getAllModifiers() {
   return [
@@ -49,27 +50,13 @@ export const isMod = (mod: (string | number | boolean)[]): mod is Mod => {
 };
 
 export async function calculateFamiliars() {
-  const familiars = await client.query({
-    allFamiliars: {
-      nodes: {
-        id: true,
-        name: true,
-        image: true,
-        attributes: true,
-        categories: true,
-      },
-    },
-  });
+  const familiars = await client.query.find(FamiliarEntity, {});
 
-  if (!familiars.allFamiliars) {
-    return [];
-  }
-  return familiars.allFamiliars.nodes
-    .filter((f) => f !== null)
-    .filter((f) => !f.categories.includes("POKEFAM"))
+  return familiars
+    .filter((f) => !f.categories.includes(FamiliarCategory.Pokefam))
     .map((f) => ({
       ...f,
-      attributes: f.attributes.filter((a) => a !== null) as Attribute[],
+      attributes: f.attributes as Attribute[],
     }))
     .map((f) => precalculateEffects(f))
     .sort((a, b) => a.name.localeCompare(b.name));
