@@ -14,7 +14,7 @@
     "@chakra-ui/react": "^3.19.0",
     "@emotion/react": "^11.14.0",
     "@tanstack/react-table": "^8.21.3",
-    "data-of-loathing": "^2.1.0",
+    "data-of-loathing": "^3.2.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0"
@@ -31,7 +31,8 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.32.1",
-    "vite": "^6.3.5"
+    "vite": "^6.3.5",
+    "vite-plugin-node-polyfills": "^0.26.0"
   },
   "packageManager": "yarn@4.6.0"
 }
