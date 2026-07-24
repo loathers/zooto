@@ -1,10 +1,10 @@
 import { Header } from "@tanstack/react-table";
-import { type ExtendedFamiliar } from "./FamiliarTable";
+import { type Familiar } from "../calculate";
 import { Group, IconButton, Popover, Portal } from "@chakra-ui/react";
 import { LuCheck, LuFilter, LuX } from "react-icons/lu";
 
 type Props = {
-  header: Header<ExtendedFamiliar, unknown>;
+  header: Header<Familiar, unknown>;
 };
 
 export function FamiliarTableHeaderFilter({ header }: Props) {

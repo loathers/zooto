@@ -1,5 +1,5 @@
 import { Header } from "@tanstack/react-table";
-import { type ExtendedFamiliar } from "./FamiliarTable";
+import { type Familiar } from "../calculate";
 import {
   createListCollection,
   Group,
@@ -12,7 +12,7 @@ import { useMemo, useState } from "react";
 import { Select } from "./Select";
 
 type Props = {
-  header: Header<ExtendedFamiliar, unknown>;
+  header: Header<Familiar, unknown>;
   onChange: (value: string) => void;
 };
 

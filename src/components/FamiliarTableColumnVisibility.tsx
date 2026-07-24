@@ -1,10 +1,10 @@
 import { Checkmark, IconButton, Menu, Portal } from "@chakra-ui/react";
 import { LuTableProperties } from "react-icons/lu";
-import { ExtendedFamiliar } from "./FamiliarTable";
+import { type Familiar } from "../calculate";
 import { Column } from "@tanstack/react-table";
 
 type Props = {
-  columns: Column<ExtendedFamiliar>[];
+  columns: Column<Familiar>[];
 };
 
 export function FamiliarTableColumnVisibility({ columns }: Props) {

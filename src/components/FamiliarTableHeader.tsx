@@ -1,12 +1,12 @@
 import { flexRender, Header } from "@tanstack/react-table";
-import { ExtendedFamiliar } from "./FamiliarTable";
+import { type Familiar } from "../calculate";
 import { Group, Stack, Table } from "@chakra-ui/react";
 import { FamiliarTableHeaderSort } from "./FamiliarTableHeaderSort";
 import { FamiliarTableHeaderFilter } from "./FamiliarTableHeaderFilter";
 import { FamiliarTableColumnVisibility } from "./FamiliarTableColumnVisibility";
 
 type Props = {
-  header: Header<ExtendedFamiliar, unknown>;
+  header: Header<Familiar, unknown>;
   onChangeSortKey: (value: string) => void;
 };
 
