@@ -1,18 +1,16 @@
 import { flexRender, Header } from "@tanstack/react-table";
+import { type Familiar } from "../calculate";
 import { Group, Stack, Table } from "@chakra-ui/react";
 import { FamiliarTableHeaderSort } from "./FamiliarTableHeaderSort";
 import { FamiliarTableHeaderFilter } from "./FamiliarTableHeaderFilter";
 import { FamiliarTableColumnVisibility } from "./FamiliarTableColumnVisibility";
 
-type Props<TData> = {
-  header: Header<TData, unknown>;
+type Props = {
+  header: Header<Familiar, unknown>;
   onChangeSortKey: (value: string) => void;
 };
 
-export function FamiliarTableHeader<TData>({
-  header,
-  onChangeSortKey,
-}: Props<TData>) {
+export function FamiliarTableHeader({ header, onChangeSortKey }: Props) {
   if (header.isPlaceholder) return <Table.ColumnHeader />;
 
   const table = header.getContext().table;
