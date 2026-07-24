@@ -1,5 +1,4 @@
 import { Header } from "@tanstack/react-table";
-import { type ExtendedFamiliar } from "./FamiliarTable";
 import {
   createListCollection,
   Group,
@@ -11,12 +10,15 @@ import { LuArrowUp01, LuArrowDown10, LuArrowUpDown } from "react-icons/lu";
 import { useMemo, useState } from "react";
 import { Select } from "./Select";
 
-type Props = {
-  header: Header<ExtendedFamiliar, unknown>;
+type Props<TData> = {
+  header: Header<TData, unknown>;
   onChange: (value: string) => void;
 };
 
-export function FamiliarTableHeaderSort({ header, onChange }: Props) {
+export function FamiliarTableHeaderSort<TData>({
+  header,
+  onChange,
+}: Props<TData>) {
   const sorted = header.column.getIsSorted();
 
   const { table } = header.getContext();

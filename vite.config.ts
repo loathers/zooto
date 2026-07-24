@@ -5,4 +5,7 @@ import dol from "data-of-loathing/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), dol()],
+  build: {
+    target: "es2022",
+  },
 });

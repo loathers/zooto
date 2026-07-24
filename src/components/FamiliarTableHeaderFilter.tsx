@@ -1,13 +1,12 @@
 import { Header } from "@tanstack/react-table";
-import { type ExtendedFamiliar } from "./FamiliarTable";
 import { Group, IconButton, Popover, Portal } from "@chakra-ui/react";
 import { LuCheck, LuFilter, LuX } from "react-icons/lu";
 
-type Props = {
-  header: Header<ExtendedFamiliar, unknown>;
+type Props<TData> = {
+  header: Header<TData, unknown>;
 };
 
-export function FamiliarTableHeaderFilter({ header }: Props) {
+export function FamiliarTableHeaderFilter<TData>({ header }: Props<TData>) {
   if (!header.column.getCanFilter()) return null;
 
   return (
